@@ -5,12 +5,12 @@ import ThreadContext from "./ThreadContext";
 function CreateThread() {
   const [title, setTitle] = useState("");
   const { refreshThreads } = useContext(ThreadContext);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await fetch(
-        "https://virtserver.swaggerhub.com/INFO_3/BulletinBoardApplication/1.0.0/threads",
+        "https://2y6i6tqn41.execute-api.ap-northeast-1.amazonaws.com/threads",
         {
           method: "POST",
           headers: {
@@ -28,6 +28,11 @@ function CreateThread() {
       const data = await response.json();
       console.log(data);
       await refreshThreads();
+      // アラートを表示
+      alert("作成完了");
+
+      // inputの値を空にする
+      setTitle("");
     } catch (error) {
       console.error(error);
     }

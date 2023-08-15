@@ -1,54 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState, useCallback } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ThreadList from "./ThreadList";
 import CreateThread from "./CreateThread";
 import ThreadContext from "./ThreadContext";
+import ThreadPosts from "./ThreadPosts";
+import "./App.css";
 
 function App() {
   const [threads, setThreads] = useState([]);
+  //掲示板のスレッドのリストを保持するthreadsという状態を作成。初期状態は空の配列です。setThreadsはこの状態を更新
 
-  const fetchThreads = async () => {
-    const response = await fetch(
-      "https://virtserver.swaggerhub.com/INFO_3/BulletinBoardApplication/1.0.0/threads"
-    );
-    const data = await response.json();
-    console.log(data);
-    setThreads(data);
-  };
-
-  useEffect(() => {
-    fetchThreads();
-  }, []);
-
-  const refreshThreads = useCallback(() => {
-    fetchThreads();
-  }, []);
+  const refreshThreads = useCallback(() => {}, []);
 
   return (
     <Router>
       <ThreadContext.Provider value={{ threads, setThreads, refreshThreads }}>
-        <div
-          className="App"
-          style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}
-        >
+        <div className="App">
           <Routes>
             <Route path="/" element={<ThreadList />} />
             <Route path="/thread/new" element={<CreateThread />} />
+            <Route path="/thread/:threadId/posts" element={<ThreadPosts />} />
           </Routes>
-          <Link
-            to="/thread/new"
-            style={{
-              display: "inline-block",
-              marginTop: "20px",
-              padding: "10px",
-              backgroundColor: "#007BFF",
-              color: "white",
-              textDecoration: "none",
-              borderRadius: "5px",
-            }}
-          >
-            新規作成
-          </Link>
         </div>
       </ThreadContext.Provider>
     </Router>
